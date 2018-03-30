@@ -38,6 +38,14 @@ func (e *Extractor) ProcessAll() {
 		log.Fatal(err)
 	}
 
+	writer := write.Writer{e.Store}
+	for _, t := range typeResult.Items {
+		fileName, content := translate.EstablishSection(t, e.TransConfig)
+		if fileName != "" && content != "" {
+			writer.SaveToFile(fileName, content)
+		}
+	}
+
 	skip := 0
 
 	e.processItems(cf, typeResult, skip)
