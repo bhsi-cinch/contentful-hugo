@@ -1,6 +1,6 @@
 package translate
 
-import "github.com/icyitscold/contentful-hugo/mapper"
+import "github.com/bhsi-cinch/contentful-hugo/mapper"
 
 func EstablishSection(t mapper.Type, tc TransConfig) (string, string) {
 	var fileName string

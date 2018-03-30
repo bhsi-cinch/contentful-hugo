@@ -3,7 +3,7 @@ package translate
 import (
 	"strings"
 
-	"github.com/icyitscold/contentful-hugo/mapper"
+	"github.com/bhsi-cinch/contentful-hugo/mapper"
 )
 
 const baseDir string = "./content/"

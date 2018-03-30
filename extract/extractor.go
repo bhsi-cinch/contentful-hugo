@@ -1,10 +1,10 @@
 package extract
 
 import (
-	"github.com/icyitscold/contentful-hugo/mapper"
-	"github.com/icyitscold/contentful-hugo/read"
-	"github.com/icyitscold/contentful-hugo/translate"
-	"github.com/icyitscold/contentful-hugo/write"
+	"github.com/bhsi-cinch/contentful-hugo/mapper"
+	"github.com/bhsi-cinch/contentful-hugo/read"
+	"github.com/bhsi-cinch/contentful-hugo/translate"
+	"github.com/bhsi-cinch/contentful-hugo/write"
 
 	"log"
 )

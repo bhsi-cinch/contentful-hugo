@@ -4,10 +4,10 @@ import (
 	"flag"
 	"os"
 
-	"github.com/icyitscold/contentful-hugo/extract"
-	"github.com/icyitscold/contentful-hugo/read"
-	"github.com/icyitscold/contentful-hugo/translate"
-	"github.com/icyitscold/contentful-hugo/write"
+	"github.com/bhsi-cinch/contentful-hugo/extract"
+	"github.com/bhsi-cinch/contentful-hugo/read"
+	"github.com/bhsi-cinch/contentful-hugo/translate"
+	"github.com/bhsi-cinch/contentful-hugo/write"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/icyitscold/contentful-hugo/mapper"
+	"github.com/bhsi-cinch/contentful-hugo/mapper"
 )
 
 type TranslationContext struct {
