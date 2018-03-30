@@ -94,8 +94,8 @@ If you need this kind of configuration, the `contentful-hugo` export process can
 
 ```
 encoding = "toml"
-[sections]
-[sections.question]
+[section]
+[section.question]
  headless = true
 
 ```
