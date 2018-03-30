@@ -24,7 +24,7 @@ contentful-hugo [Flags]
 Flags:
  --space-id string         Id of the contentful space from which to extract content. If not present will default to an environment variable named 'CONTENTFUL_API_SPACE'
  --api-key string          API Key used to authenticate with contentful If not present will default to an environment variable named 'CONTENTFUL_API_SPACE'
- --config-file string      Path to the config TOML file to load. Defauls to ./extract-config.tml
+ --config-file string      Path to the config TOML file to load. Defauls to ./extractor-config.tml
  ```
 
 The tool requires two parameters to work, a contentful space id and API key. These can be provided as command line flags or as environment variables
