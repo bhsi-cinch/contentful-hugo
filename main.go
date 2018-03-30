@@ -11,15 +11,19 @@ import (
 )
 
 func main() {
+	space := flag.String("space-id", os.Getenv("CONTENTFUL_API_SPACE"), "The contentful space id to export data from")
+	key := flag.String("api-key", os.Getenv("CONTENTFUL_API_KEY"), "The contentful delivery API access token")
+	config := flag.String("config-file", "extract-config.toml", "Path to the TOML config file to load for export config")
+	flag.Parse()
 	extractor := extract.Extractor{
 		read.ReadConfig{
 			"https://cdn.contentful.com",
-			*flag.String("space-id", os.Getenv("CONTENTFUL_API_SPACE"), "The contentful space id to export data from"),
-			*flag.String("api-key", os.Getenv("CONTENTFUL_API_KEY"), "The contentful delivery API access token"),
+			*space,
+			*key,
 			"en-US",
 		},
 		read.HttpGetter{},
-		translate.LoadConfig(*flag.String("config-file", "extract-config.toml", "Path to the TOML config file to load for export config")),
+		translate.LoadConfig(*config),
 		write.FileStore{},
 	}
 
