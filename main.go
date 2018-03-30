@@ -19,7 +19,7 @@ func main() {
 			"en-US",
 		},
 		read.HttpGetter{},
-		translate.LoadConfig(),
+		translate.LoadConfig(*flag.String("config-file", "extract-config.toml", "Path to the TOML config file to load for export config")),
 		write.FileStore{},
 	}
 

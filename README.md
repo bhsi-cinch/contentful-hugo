@@ -18,6 +18,15 @@ go install
 
 ## Usage
 
+```
+contentful-hugo [Flags]
+
+Flags:
+ --space-id string         Id of the contentful space from which to extract content. If not present will default to an environment variable named 'CONTENTFUL_API_SPACE'
+ --api-key string          API Key used to authenticate with contentful If not present will default to an environment variable named 'CONTENTFUL_API_SPACE'
+ --config-file string      Path to the config TOML file to load. Defauls to ./extract-config.tml
+ ```
+
 The tool requires two parameters to work, a contentful space id and API key. These can be provided as command line flags or as environment variables
 
 ```
@@ -27,7 +36,7 @@ contentful-hugo
 ```
 
 ```
-contentful-hugo --space-id [my_space_id] --api-key [my_content_delivery_key]
+contentful-hugo --space-id [YOUR-ID-HERE] --api-key [YOUR-ACCESS-KEY-HERE] --config-file ./export-conf.toml
 
 ```
 
@@ -42,10 +51,11 @@ Special cases:
  - File names are based on the ID of the item to make it easily referencable from related items (for the machine, not humans)
 
 ## Configuration
+Use the `--config-file` command line flag to provide the location of a TOML configuration to laod or ensure that there is a `extract-config.toml` file in the work directory of contentful-hugo
 
 ### Configure YAML output
 
-While the default output is in TOML format, it is also possible to output content in YAML format. To achieve this, ensure there is a `extract-config.toml` file in the work directory of contentful-hugo with the following content:
+While the default output is in TOML format, it is also possible to output content in YAML format. Use the following key in your config file:
 
 ```
 encoding = "yaml"
