@@ -83,14 +83,14 @@ For example, let's say you need to make a section [headless](https://gohugo.io/c
 |   |   |   single.html //question refs are loaded via .Site.GetPage
 ```
 
-Without any further confuguration, hugo would generate a HTML file for the page using the `./layouts/page/single.html` layout template but it would aslo generate HTML files for the questions using the `./layouts/_default/single.html` layout template. To prevent this from happening you would create the following file under the path `./content/question/_index.md`: 
+Without any further confuguration, hugo would generate a HTML file for the page using the `./layouts/page/single.html` layout template but it would aslo generate HTML files for the questions using the `./layouts/_default/single.html` layout template. To prevent this from happening you would create the following file under the path `./content/question/index.md`: 
 
 ```
 +++
 headless = true
 +++
 ```
-If you need this kind of configuration, the `contentful-hugo` export process can generate this `_index.md` file for you.  Simply provide the TOML to use in your config file:
+If you need this kind of configuration, the `contentful-hugo` export process can generate this `index.md` file for you.  Simply provide the TOML to use in your config file:
 
 ```
 encoding = "toml"
@@ -99,6 +99,6 @@ encoding = "toml"
  headless = true
 
 ```
-You can nest as many tables as you need under the `[sections]` and if the nested table name matches a contentful content type id than the configuration provided will be propagated to the section's `_index.md` frontmatter. 
+You can nest as many tables as you need under the `[sections]` and if the nested table name matches a contentful content type id than the configuration provided will be propagated to the section's `index.md` frontmatter. 
 
 [1]: https://gohugo.io/content-management/sections/

@@ -7,7 +7,8 @@ import (
 )
 
 const baseDir string = "./content/"
-const idxFile string = "_index.md"
+const idxFile string = "index.md"
+const rootIdxFile string = "_" + idxFile
 
 func Dir(contentType string) string {
 	dir := baseDir
@@ -20,7 +21,7 @@ func Dir(contentType string) string {
 func Filename(item mapper.Item) string {
 	dir := Dir(item.ContentType())
 	if dir == baseDir {
-		return dir + idxFile
+		return dir + rootIdxFile
 	}
 
 	return dir + item.Sys.ID + ".md"
