@@ -23,8 +23,8 @@ go install
 contentful-hugo [Flags]
 
 Flags:
- -space-id=value      "Id of the contentful space from which to extract content. If not present will default to an environment variable named `$CONTENTFUL_SPACE_ID`"
- -api-token=value     "API Key used to authenticate with contentful If not present will default to an environment variable named `$CONTENTFUL_DELIVERY_API_TOKEN`"
+ -space-id=value      "Id of the contentful space from which to extract content. If not present will default to an environment variable named `$CONTENTFUL_API_SPACE`"
+ -api-token=value     "API Key used to authenticate with contentful for content delivery. If not present will default to an environment variable named `$CONTENTFUL_API_KEY`"
  -config-file=value   "Path to the config TOML file to load. Defauls to `./extract-config.tml`"
  ```
 
@@ -33,8 +33,8 @@ The tool requires two parameters to work, a contentful space id and API key. The
 _As environment vars..._
 
 ``` sh
-export CONTENTFUL_DELIVERY_API_TOKEN=YOUR-ACCESS-TOKEN-HERE
-export CONTENTFUL_SPACE_ID=YOUR-ID-HERE
+export CONTENTFUL_API_KEY=YOUR-CONTENT-DELIVERY-API-ACCESS-TOKEN-HERE
+export CONTENTFUL_API_SPACE=YOUR-SPACE-ID-HERE
 
 contentful-hugo
 ```

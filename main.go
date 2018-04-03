@@ -11,8 +11,8 @@ import (
 )
 
 func main() {
-	space := flag.String("space-id", os.Getenv("CONTENTFUL_SPACE_ID"), "The contentful space id to export data from")
-	key := flag.String("api-token", os.Getenv("CONTENTFUL_DELIVERY_API_TOKEN"), "The contentful delivery API access token")
+	space := flag.String("space-id", os.Getenv("CONTENTFUL_API_SPACE"), "The contentful space id to export data from")
+	key := flag.String("api-key", os.Getenv("CONTENTFUL_API_KEY"), "The contentful delivery API access token")
 	config := flag.String("config-file", "extract-config.toml", "Path to the TOML config file to load for export config")
 
 	flag.Parse()
