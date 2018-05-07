@@ -18,7 +18,7 @@ func TestConvertContent(t *testing.T) {
 				"key": "value",
 			},
 			[]mapper.TypeField{
-				mapper.TypeField{"key", "", "String", false, false, false, false},
+				mapper.TypeField{ID: "key", Name: "", Type: "String", Localized: false, Required: false, Disabled: false, Omitted: false},
 			},
 			Content{
 				map[string]interface{}{
@@ -35,9 +35,9 @@ func TestConvertContent(t *testing.T) {
 				"slug":        "my-test-slug",
 			},
 			[]mapper.TypeField{
-				mapper.TypeField{"key", "", "String", false, false, false, false},
-				mapper.TypeField{"mainContent", "", "String", false, false, false, false},
-				mapper.TypeField{"slug", "", "String", false, false, false, false},
+				mapper.TypeField{ID: "key", Name: "", Type: "String", Localized: false, Required: false, Disabled: false, Omitted: false},
+				mapper.TypeField{ID: "mainContent", Name: "", Type: "String", Localized: false, Required: false, Disabled: false, Omitted: false},
+				mapper.TypeField{ID: "slug", Name: "", Type: "String", Localized: false, Required: false, Disabled: false, Omitted: false},
 			},
 			Content{
 				map[string]interface{}{
@@ -50,10 +50,10 @@ func TestConvertContent(t *testing.T) {
 		},
 	}
 
-	tc := TranslationConfig{}
+	tc := TranslationContext{}
 
 	for _, test := range tests {
-		result := tc.convertContent(test.Map, test.fields)
+		result := tc.ConvertToContent(tc.MapContentValuesToTypeNames(test.Map, test.fields))
 		if !reflect.DeepEqual(result, test.expected) {
 			t.Errorf("convertContent(%v, %v) incorrect, expected %v, got %v", test.Map, test.fields, test.expected, result)
 		}
@@ -114,7 +114,7 @@ func TestTranslateField(t *testing.T) {
 	}{
 		{
 			"Unchanged",
-			mapper.TypeField{"", "", "default", false, false, false, false},
+			mapper.TypeField{ID: "", Name: "", Type: "default", Localized: false, Required: false, Disabled: false, Omitted: false},
 			"Unchanged",
 		},
 		{
@@ -123,12 +123,12 @@ func TestTranslateField(t *testing.T) {
 				map[string]interface{}{"sys": map[string]interface{}{"id": "test-id-2", "linkType": "Entry"}},
 				map[string]interface{}{"sys": map[string]interface{}{"id": "test-id-3", "linkType": "Entry"}},
 			},
-			mapper.TypeField{"", "", "Array", false, false, false, false},
+			mapper.TypeField{ID: "", Name: "", Type: "Array", Localized: false, Required: false, Disabled: false, Omitted: false},
 			[]string{"test-id-1.md", "test-id-2.md", "test-id-3.md"},
 		},
 	}
 
-	tc := TranslationConfig{}
+	tc := TranslationContext{}
 
 	for _, test := range tests {
 		result := tc.translateField(test.value, test.field)

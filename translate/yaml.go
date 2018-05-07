@@ -1,6 +1,10 @@
 package translate
 
-import "gopkg.in/yaml.v2"
+import (
+	"regexp"
+
+	"gopkg.in/yaml.v2"
+)
 
 // ToYaml .() -> string
 // Takes a Content struct and outputs it as YAML frontmatter followed by main-content.
@@ -9,6 +13,18 @@ func (s Content) ToYaml() string {
 	result += s.MainContent
 
 	return result
+}
+
+// FromYaml reads in a *.yaml file and returns all mappings.
+func FromYaml(s string) (c map[string]interface{}, err error) {
+	c = map[string]interface{}{}
+
+	regex := regexp.MustCompile(`((?:.+=.+\s*)+)`)
+	regRes := regex.Find([]byte(s))
+
+	err = yaml.Unmarshal(regRes, &c)
+
+	return
 }
 
 // WriteYamlFrontmatter (fm Map[]) -> string

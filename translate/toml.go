@@ -1,6 +1,8 @@
 package translate
 
 import (
+	"regexp"
+
 	"github.com/naoina/toml"
 )
 
@@ -11,6 +13,18 @@ func (s Content) ToToml() string {
 	result += s.MainContent
 
 	return result
+}
+
+// FromToml reads in a *.toml file and returns all mappings.
+func FromToml(s string) (c map[string]interface{}, err error) {
+	c = map[string]interface{}{}
+	//regex := regexp.MustCompile(`(?<=^[+]{3})((?:\s*.+=.+\s*)+)(?=^[+]{3})`)
+	regex := regexp.MustCompile(`((?:.+=.+\s*)+)`)
+	regRes := regex.Find([]byte(s))
+
+	err = toml.Unmarshal(regRes, &c)
+
+	return
 }
 
 // WriteTomlFrontmatter (fm Map[]) -> string
