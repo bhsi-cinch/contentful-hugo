@@ -71,7 +71,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 	archetypeDataMap := make(map[string]map[string]interface{})
 	reader := read.Reader{Store: e.RStore}
 	writer := write.Writer{Store: e.WStore}
-	tc := translate.TranslationContext{itemResult, e.TransConfig}
+	tc := translate.TranslationContext{Result: itemResult, TransConfig: e.TransConfig}
 	for _, item := range itemResult.Items {
 		contentType := item.ContentType()
 		itemType, err := typeResult.GetType(contentType)
