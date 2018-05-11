@@ -1,6 +1,7 @@
 package translate
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/naoina/toml"
@@ -19,10 +20,15 @@ func (s Content) ToToml() string {
 
 // FromToml reads in a *.toml file and returns all mappings.
 func FromToml(s string) (c map[string]interface{}, err error) {
-	frontmatter := []byte(strings.TrimRight(strings.SplitAfter(s, _TOMLdelimiter)[1], _TOMLdelimiter))
-
 	c = map[string]interface{}{}
-	err = toml.Unmarshal(frontmatter, &c)
+	potentialFrontmatter := strings.SplitAfter(s, _TOMLdelimiter)
+
+	if len(potentialFrontmatter) > 1 {
+		frontmatter := []byte(strings.TrimRight(potentialFrontmatter[1], _TOMLdelimiter))
+		err = toml.Unmarshal(frontmatter, &c)
+	} else {
+		err = errors.New("No parsable TOML found in: " + s)
+	}
 
 	return
 }

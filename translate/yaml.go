@@ -1,6 +1,7 @@
 package translate
 
 import (
+	"errors"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -19,10 +20,15 @@ func (s Content) ToYaml() string {
 
 // FromYaml reads in a *.yaml file and returns all mappings.
 func FromYaml(s string) (c map[string]interface{}, err error) {
-	frontmatter := []byte(strings.TrimRight(strings.SplitAfter(s, _YAMLdelimiter)[1], _YAMLdelimiter))
-
 	c = map[string]interface{}{}
-	err = yaml.Unmarshal(frontmatter, &c)
+	potentialFrontmatter := strings.SplitAfter(s, _YAMLdelimiter)
+
+	if len(potentialFrontmatter) > 1 {
+		frontmatter := []byte(strings.TrimRight(potentialFrontmatter[1], _YAMLdelimiter))
+		err = yaml.Unmarshal(frontmatter, &c)
+	} else {
+		err = errors.New("No parsable YAML found in: " + s)
+	}
 
 	return
 }

@@ -2,6 +2,7 @@ package translate
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 
 	"github.com/bhsi-cinch/contentful-hugo/mapper"
@@ -18,17 +19,39 @@ type Content struct {
 	Slug        string
 }
 
+func isZero(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Func, reflect.Map, reflect.Slice:
+		return v.IsNil()
+	case reflect.Array:
+		z := true
+		for i := 0; i < v.Len(); i++ {
+			z = z && isZero(v.Index(i))
+		}
+		return z
+	case reflect.Struct:
+		z := true
+		for i := 0; i < v.NumField(); i++ {
+			if v.Field(i).CanSet() {
+				z = z && isZero(v.Field(i))
+			}
+		}
+		return z
+	case reflect.Ptr:
+		return isZero(reflect.Indirect(v))
+	}
+	// Compare other types directly:
+	z := reflect.Zero(v.Type())
+	result := v.Interface() == z.Interface()
+
+	return result
+}
+
 // UnionValuesAndOverride takes a defaults and an overrides map and assigns any missing
 // values from the defaults to the overrides map.
 func (tc *TranslationContext) UnionValuesAndOverride(itemDefault map[string]interface{}, itemOverride map[string]interface{}) (combinedItem map[string]interface{}) {
 	for k, v := range itemDefault {
-		if itemOverride[k] == nil {
-			itemOverride[k] = v
-		} else if s, ok := itemOverride[k].(string); ok && s == "" {
-			itemOverride[k] = v
-		} else if s, ok := itemOverride[k].([]string); ok && len(s) == 0 {
-			itemOverride[k] = v
-		} else if s, ok := itemOverride[k].([]interface{}); ok && len(s) == 0 {
+		if isZero(reflect.ValueOf(itemOverride[k])) {
 			itemOverride[k] = v
 		}
 	}

@@ -7,6 +7,70 @@ import (
 	"github.com/bhsi-cinch/contentful-hugo/mapper"
 )
 
+func TestTranslateFromMarkdown(t *testing.T) {
+	yamlMarkdown := `
+---
+overriddentestbool: false
+overriddentestint: 13
+overriddenteststring: "please, overide me"
+overriddentestslicenil: []
+overriddentestslicebool: [false, false, false]
+overriddentestsliceint: [13, 13, 13]		
+overriddentestslicestring: ["please", "overide", "me"]
+testbool: true
+testint: 42
+teststring: "test"
+testslicenil: []
+testslicebool: [true, false, true]
+testsliceint: [1, 2, 3]		
+testslicestring: ["one", "two", "thee"]
+---
+`
+	tomlMarkdown := `
++++
+overriddentestbool = false
+overriddentestint = 13
+overriddenteststring = "please, overide me"
+overriddentestslicenil = []
+overriddentestslicebool = [false, false, false]
+overriddentestsliceint = [13, 13, 13]		
+overriddentestslicestring = ["please", "overide", "me"]
+testbool = true
+testint = 42
+teststring = "test"
+testslicenil = []
+testslicebool = [true, false, true]
+testsliceint = [1, 2, 3]		
+testslicestring = ["one", "two", "thee"]
++++
+`
+	extraMarkdown := "\n#header\n_italics_\n__bold__"
+	archetypeYaml := yamlMarkdown + extraMarkdown
+	archetypeToml := tomlMarkdown + extraMarkdown
+
+	tests := []struct {
+		encoding   string
+		givenInput string
+	}{
+		{
+			encoding:   "yaml",
+			givenInput: archetypeYaml,
+		},
+		{
+			encoding:   "toml",
+			givenInput: archetypeToml,
+		},
+	}
+
+	for _, test := range tests {
+		tc := TranslationContext{TransConfig: TransConfig{Encoding: test.encoding}}
+		result, err := tc.TranslateFromMarkdown(test.givenInput)
+		if err != nil || result == nil {
+			t.Errorf("TranslateFromMarkdown() failed...\n\nInput:\n%s\n\nActual Output:\n%v\n\nInner Error:\n%v", test.givenInput, result, err)
+		}
+	}
+}
+
 func TestConvertContent(t *testing.T) {
 	tests := []struct {
 		Map      map[string]interface{}
@@ -55,7 +119,7 @@ func TestConvertContent(t *testing.T) {
 	for _, test := range tests {
 		result := tc.ConvertToContent(tc.MapContentValuesToTypeNames(test.Map, test.fields))
 		if !reflect.DeepEqual(result, test.expected) {
-			t.Errorf("convertContent(%v, %v) incorrect, expected %v, got %v", test.Map, test.fields, test.expected, result)
+			t.Errorf("_.ConvertToContent( _.MapContentValuesToTypeNames(%v, %v) ) incorrect, expected %v, got %v", test.Map, test.fields, test.expected, result)
 		}
 
 	}
