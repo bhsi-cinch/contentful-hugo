@@ -43,7 +43,7 @@ func LeafBundleFilename(t mapper.Type) string {
 }
 
 // ArcheTypeFilename takes a content-type's name and returns the file path to the corresponding archetype file.
-func ArcheTypeFilename(contentTypeName string) string {
+func GetArchetypeFilename(contentTypeName string) string {
 	dir := baseArchetypeDir
 
 	return dir + contentTypeName + ".md"

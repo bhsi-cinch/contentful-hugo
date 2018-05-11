@@ -80,7 +80,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		}
 
 		if archetypeDataMap[contentType] == nil {
-			result, err := reader.ViewFromFile(translate.ArcheTypeFilename(contentType))
+			result, err := reader.ViewFromFile(translate.GetArchetypeFilename(contentType))
 			if err == nil {
 				archeMap, err := tc.TranslateFromMarkdown(result)
 				if err != nil {
@@ -95,7 +95,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		}
 
 		contentMap := tc.MapContentValuesToTypeNames(item.Fields, itemType.Fields)
-		overriddenContentmap := tc.UnionValuesAndOverride(archetypeDataMap[contentType], contentMap)
+		overriddenContentmap := tc.MergeMaps(archetypeDataMap[contentType], contentMap)
 		contentMarkdown := tc.TranslateToMarkdown(tc.ConvertToContent(overriddenContentmap))
 		fileName := translate.Filename(item)
 		writer.SaveToFile(fileName, contentMarkdown)

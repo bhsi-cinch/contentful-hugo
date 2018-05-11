@@ -47,9 +47,9 @@ func isZero(v reflect.Value) bool {
 	return result
 }
 
-// UnionValuesAndOverride takes a defaults and an overrides map and assigns any missing
+// MergeMaps takes a defaults and an overrides map and assigns any missing
 // values from the defaults to the overrides map.
-func (tc *TranslationContext) UnionValuesAndOverride(itemDefault map[string]interface{}, itemOverride map[string]interface{}) (combinedItem map[string]interface{}) {
+func (tc *TranslationContext) MergeMaps(itemDefault map[string]interface{}, itemOverride map[string]interface{}) (combinedItem map[string]interface{}) {
 	for k, v := range itemDefault {
 		if isZero(reflect.ValueOf(itemOverride[k])) {
 			itemOverride[k] = v
