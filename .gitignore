@@ -1,3 +1,6 @@
 content
 dist
 vendor
+
+.vscode/
+debug
