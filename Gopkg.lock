@@ -2,29 +2,38 @@
 
 
 [[projects]]
+  digest = "1:b56c589214f01a5601e0821387db484617392d0042f26234bf2da853a2f498a1"
   name = "github.com/naoina/go-stringutil"
   packages = ["."]
+  pruneopts = "UT"
   revision = "6b638e95a32d0c1131db0e7fe83775cbea4a0d0b"
   version = "v0.1.0"
 
 [[projects]]
+  digest = "1:f58c3d0e46b64878d00652fedba24ee879725191ab919dca7b62586859281c04"
   name = "github.com/naoina/toml"
   packages = [
     ".",
-    "ast"
+    "ast",
   ]
+  pruneopts = "UT"
   revision = "e6f5723bf2a66af014955e0888881314cf294129"
   version = "v0.1.1"
 
 [[projects]]
+  digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
+  pruneopts = "UT"
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
   version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "38bd3280adab0af76ef5ef5d9f8ad60355f67163a2150d54358c327f6db8bcf6"
+  input-imports = [
+    "github.com/naoina/toml",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

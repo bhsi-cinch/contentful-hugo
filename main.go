@@ -13,16 +13,22 @@ import (
 
 func main() {
 	space := flag.String("space-id", os.Getenv("CONTENTFUL_API_SPACE"), "The contentful space id to export data from")
+	env := flag.String("environment", os.Getenv("CONTENTFUL_API_ENV"), "The contentful environment to export data from")
 	key := flag.String("api-key", os.Getenv("CONTENTFUL_API_KEY"), "The contentful delivery API access token")
 	config := flag.String("config-file", "extract-config.toml", "Path to the TOML config file to load for export config")
 	preview := flag.Bool("p", false, "Use contentful's preview API so that draft content is downloaded")
 	flag.Parse()
+
+	if *env == "" {
+		*env = "master"
+	}
 
 	fmt.Println("Begin contentful export : ", *space)
 	extractor := extract.Extractor{
 		ReadConfig: read.ReadConfig{
 			UsePreview:  *preview,
 			SpaceID:     *space,
+			Environment: *env,
 			AccessToken: *key,
 			Locale:      "en-US",
 		},
