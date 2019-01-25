@@ -19,7 +19,7 @@ build:
     - goos: openbsd
       goarch: arm
       goarm: 6
-fpm:
+nfpm:
   formats:
       - deb
   vendor: "Young Industries"
