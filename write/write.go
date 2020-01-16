@@ -1,7 +1,6 @@
 package write
 
 import (
-	"log"
 	"os"
 	"strings"
 )
@@ -10,19 +9,20 @@ type Writer struct {
 	Store Store
 }
 
-func (w *Writer) SaveToFile(fileName string, output string) {
+func (w *Writer) SaveToFile(fileName string, output string) error {
 	var fileMode os.FileMode
 	fileMode = 0733
 
 	err := w.Store.MkdirAll(dirForFile(fileName), fileMode)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	err = w.Store.WriteFile(fileName, []byte(output), fileMode)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
 func dirForFile(filename string) string {

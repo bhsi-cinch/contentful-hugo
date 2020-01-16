@@ -40,7 +40,8 @@ func main() {
 
 	err := extractor.ProcessAll()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Contentful export failed with the following error: " + err.Error())
+		os.Exit(1)
 	} else {
 		fmt.Println("finished")
 	}

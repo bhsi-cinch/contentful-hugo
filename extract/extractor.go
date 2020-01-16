@@ -5,8 +5,6 @@ import (
 	"github.com/bhsi-cinch/contentful-hugo/read"
 	"github.com/bhsi-cinch/contentful-hugo/translate"
 	"github.com/bhsi-cinch/contentful-hugo/write"
-
-	"log"
 )
 
 // Extractor enables the automated tests to replace key functionalities
@@ -31,13 +29,11 @@ func (e *Extractor) ProcessAll() error {
 	}
 	typesReader, err := cf.Types()
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 
 	typeResult, err := mapper.MapTypes(typesReader)
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 
@@ -45,27 +41,29 @@ func (e *Extractor) ProcessAll() error {
 	for _, t := range typeResult.Items {
 		fileName, content := translate.EstablishDirLevelConf(t, e.TransConfig)
 		if fileName != "" && content != "" {
-			writer.SaveToFile(fileName, content)
+			err = writer.SaveToFile(fileName, content)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
 	skip := 0
 
-	e.processItems(cf, typeResult, skip)
-	return nil
+	return e.processItems(cf, typeResult, skip)
 }
 
 // processItems is a recursive function which goes through all pages
 // returned by Contentful and creates a markdownfile for each.
-func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResult, skip int) {
+func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResult, skip int) error {
 	itemsReader, err := cf.Items(skip)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	itemResult, err := mapper.MapItems(itemsReader)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	archetypeDataMap := make(map[string]map[string]interface{})
@@ -76,7 +74,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		contentType := item.ContentType()
 		itemType, err := typeResult.GetType(contentType)
 		if err != nil {
-			log.Fatalln(err)
+			return err
 		}
 
 		if archetypeDataMap[contentType] == nil {
@@ -84,7 +82,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 			if err == nil {
 				archeMap, err := tc.TranslateFromMarkdown(result)
 				if err != nil {
-					log.Fatalln(err)
+					return err
 				}
 
 				archetypeDataMap[contentType] = archeMap
@@ -98,11 +96,15 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		overriddenContentmap := tc.MergeMaps(archetypeDataMap[contentType], contentMap)
 		contentMarkdown := tc.TranslateToMarkdown(tc.ConvertToContent(overriddenContentmap))
 		fileName := translate.Filename(item)
-		writer.SaveToFile(fileName, contentMarkdown)
+		err = writer.SaveToFile(fileName, contentMarkdown)
+		if err != nil {
+			return err
+		}
 	}
 
 	nextPage := itemResult.Skip + itemResult.Limit
 	if nextPage < itemResult.Total {
-		e.processItems(cf, typeResult, nextPage)
+		return e.processItems(cf, typeResult, nextPage)
 	}
+	return nil
 }

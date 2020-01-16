@@ -8,12 +8,11 @@ This tool extracts all content from your Contentful space and makes it easily co
 
 ### Go Install Method
 
-Assuming Go (1.10 +) is installed as well as [dep](https://golang.github.io/dep/)
+Assuming a version of go with Go mod 
 
 ``` sh
 go get -u "github.com/bhsi-cinch/contentful-hugo"
 cd "$GOPATH/src/github.com/bhsi-cinch/contentful-hugo"
-dep ensure
 go install
 ```
 
