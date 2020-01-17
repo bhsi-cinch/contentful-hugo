@@ -2,19 +2,16 @@ package mapper
 
 import (
 	"encoding/json"
-	"io"
 )
 
-func MapTypes(rc io.ReadCloser) (typeResult TypeResult, err error) {
-	defer rc.Close()
-	err = json.NewDecoder(rc).Decode(&typeResult)
+func MapTypes(rc []byte) (typeResult TypeResult, err error) {
+	err = json.Unmarshal(rc, &typeResult)
 
 	return
 }
 
-func MapItems(rc io.ReadCloser) (itemResult ItemResult, err error) {
-	defer rc.Close()
-	err = json.NewDecoder(rc).Decode(&itemResult)
+func MapItems(rc []byte) (itemResult ItemResult, err error) {
+	err = json.Unmarshal(rc, &itemResult)
 
 	return
 }

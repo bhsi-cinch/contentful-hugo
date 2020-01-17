@@ -2,7 +2,6 @@ package read
 
 import (
 	"fmt"
-	"io"
 )
 
 const previewURL string = "https://preview.contentful.com"
@@ -16,18 +15,18 @@ type Contentful struct {
 }
 
 // Types will use Contentful's content_types endpoint to retrieve all content types from contentful
-func (c *Contentful) Types() (rc io.ReadCloser, err error) {
+func (c *Contentful) Types() (rc []byte, err error) {
 	url := fmt.Sprintf(contentURLTemplate, c.ReadConfig.SpaceID, c.ReadConfig.Environment, c.ReadConfig.AccessToken, c.ReadConfig.Locale)
 	return c.get(url)
 }
 
 // Items will use Contentful's entires endpoint to retrieve all 'items' from contetnful
-func (c *Contentful) Items(skip int) (rc io.ReadCloser, err error) {
+func (c *Contentful) Items(skip int) (rc []byte, err error) {
 	url := fmt.Sprintf(itemsURLTemplate, c.ReadConfig.SpaceID, c.ReadConfig.Environment, c.ReadConfig.AccessToken, c.ReadConfig.Locale, skip)
 	return c.get(url)
 }
 
-func (c *Contentful) get(endpoint string) (rc io.ReadCloser, err error) {
+func (c *Contentful) get(endpoint string) (rc []byte, err error) {
 	urlBase := contentURL
 	if c.ReadConfig.UsePreview {
 		urlBase = previewURL

@@ -2,6 +2,7 @@ package extract
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -41,10 +42,10 @@ func (mrc MockReaderCloser) Close() error {
 
 var count int
 
-func (mg MockGetter) Get(url string) (result io.ReadCloser, err error) {
+func (mg MockGetter) Get(url string) (result []byte, err error) {
 	mrc := MockReaderCloser{strings.NewReader(mg.JSON[count])}
 	count++
-	return mrc, nil
+	return ioutil.ReadAll(mrc)
 }
 
 func TestExtractor(t *testing.T) {

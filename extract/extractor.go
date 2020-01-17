@@ -36,12 +36,12 @@ func (e *Extractor) ProcessAll() (Stats, error) {
 		Getter:     e.Getter,
 		ReadConfig: e.ReadConfig,
 	}
-	typesReader, err := cf.Types()
+	types, err := cf.Types()
 	if err != nil {
 		return *e.stats, err
 	}
 
-	typeResult, err := mapper.MapTypes(typesReader)
+	typeResult, err := mapper.MapTypes(types)
 	if err != nil {
 		return *e.stats, err
 	}
@@ -71,12 +71,12 @@ func (e *Extractor) ProcessAll() (Stats, error) {
 // processItems is a recursive function which goes through all pages
 // returned by Contentful and creates a markdownfile for each.
 func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResult, skip int) error {
-	itemsReader, err := cf.Items(skip)
+	items, err := cf.Items(skip)
 	if err != nil {
 		return err
 	}
 
-	itemResult, err := mapper.MapItems(itemsReader)
+	itemResult, err := mapper.MapItems(items)
 	if err != nil {
 		return err
 	}
