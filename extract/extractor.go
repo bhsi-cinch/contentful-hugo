@@ -20,9 +20,10 @@ type Extractor struct {
 }
 
 type Stats struct {
+	HTTP       []string
 	Types      int
-	IndexFiles int
-	Items      int
+	IndexFiles []string
+	Entries    []string
 }
 
 // ProcessAll goes through all stages: Read, Map, Translate and Write.
@@ -31,6 +32,9 @@ type Stats struct {
 func (e *Extractor) ProcessAll() (Stats, error) {
 
 	e.stats = new(Stats)
+	e.stats.HTTP = make([]string, 0)
+	e.stats.IndexFiles = make([]string, 0)
+	e.stats.Entries = make([]string, 0)
 
 	cf := read.Contentful{
 		Getter:     e.Getter,
@@ -48,7 +52,10 @@ func (e *Extractor) ProcessAll() (Stats, error) {
 
 	e.stats.Types = len(typeResult.Items)
 
-	writer := write.Writer{Store: e.WStore}
+	writer := write.Writer{
+		Store: e.WStore,
+		Files: make([]string, 0),
+	}
 	for _, t := range typeResult.Items {
 		fileName, content := translate.EstablishDirLevelConf(t, e.TransConfig)
 		if fileName != "" && content != "" {
@@ -56,15 +63,16 @@ func (e *Extractor) ProcessAll() (Stats, error) {
 			if err != nil {
 				return *e.stats, err
 			}
-			e.stats.IndexFiles++
 		}
 	}
+	e.stats.IndexFiles = writer.Files
 	skip := 0
 
 	err = e.processItems(cf, typeResult, skip)
 	if err != nil {
 		return *e.stats, err
 	}
+	e.stats.HTTP = cf.Getter.Stats()
 	return *e.stats, nil
 }
 
@@ -83,7 +91,10 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 
 	archetypeDataMap := make(map[string]map[string]interface{})
 	reader := read.Reader{Store: e.RStore}
-	writer := write.Writer{Store: e.WStore}
+	writer := write.Writer{
+		Store: e.WStore,
+		Files: make([]string, 0),
+	}
 	tc := translate.TranslationContext{Result: itemResult, TransConfig: e.TransConfig}
 	for _, item := range itemResult.Items {
 		contentType := item.ContentType()
@@ -115,9 +126,9 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		if err != nil {
 			return err
 		}
-		e.stats.Items++
 	}
 
+	e.stats.Entries = append(e.stats.Entries, writer.Files...)
 	nextPage := itemResult.Skip + itemResult.Limit
 	if nextPage < itemResult.Total {
 		return e.processItems(cf, typeResult, nextPage)

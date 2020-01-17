@@ -42,10 +42,13 @@ func (mrc MockReaderCloser) Close() error {
 
 var count int
 
-func (mg MockGetter) Get(url string) (result []byte, err error) {
+func (mg *MockGetter) Get(url string) (result []byte, err error) {
 	mrc := MockReaderCloser{strings.NewReader(mg.JSON[count])}
 	count++
 	return ioutil.ReadAll(mrc)
+}
+func (mg *MockGetter) Stats() []string {
+	return make([]string, 0)
 }
 
 func TestExtractor(t *testing.T) {
@@ -555,7 +558,7 @@ func TestExtractor(t *testing.T) {
 			AccessToken: "my-fake-content-key",
 			Locale:      "en-US",
 		},
-		Getter: MockGetter{[]string{testTypes, testContent}},
+		Getter: &MockGetter{[]string{testTypes, testContent}},
 		RStore: MockStore{},
 		WStore: MockStore{},
 	}

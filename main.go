@@ -32,17 +32,31 @@ func main() {
 			AccessToken: *key,
 			Locale:      "en-US",
 		},
-		Getter:      read.HttpGetter{},
+		Getter: &read.HttpGetter{
+			make([]string, 0),
+		},
 		TransConfig: translate.LoadConfig(*config),
 		WStore:      write.FileStore{},
 		RStore:      read.FileStore{},
 	}
-
 	s, err := extractor.ProcessAll()
 	if err != nil {
 		fmt.Println("Contentful export failed with the following error: " + err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Printf("Exported %d items, and wrote %d index files for %d content types", s.Items, s.IndexFiles, s.Types)
+
+		fmt.Println("Contentful API Reqeusts:")
+		for _, s := range s.HTTP {
+			fmt.Println(s)
+		}
+		fmt.Println("Directory Level Files Written:")
+		for _, s := range s.IndexFiles {
+			fmt.Println(s)
+		}
+		fmt.Println("Entry Files Written:")
+		for _, s := range s.Entries {
+			fmt.Println(s)
+		}
+		fmt.Printf("Exported %d entries, and wrote %d index files for %d content types", len(s.Entries), len(s.IndexFiles), s.Types)
 	}
 }

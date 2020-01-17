@@ -1,12 +1,14 @@
 package write
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
 
 type Writer struct {
 	Store Store
+	Files []string
 }
 
 func (w *Writer) SaveToFile(fileName string, output string) error {
@@ -18,10 +20,13 @@ func (w *Writer) SaveToFile(fileName string, output string) error {
 		return err
 	}
 
-	err = w.Store.WriteFile(fileName, []byte(output), fileMode)
+	bytes := []byte(output)
+	err = w.Store.WriteFile(fileName, bytes, fileMode)
 	if err != nil {
 		return err
 	}
+	w.Files = append(w.Files, fmt.Sprintf("%s: %d", fileName, len(bytes)))
+
 	return nil
 }
 
