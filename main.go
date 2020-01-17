@@ -23,7 +23,7 @@ func main() {
 		*env = "master"
 	}
 
-	fmt.Println("Begin contentful export : ", *space)
+	fmt.Printf("Begin contentful export from space '%s', environment '%s'\n", *space, *env)
 	extractor := extract.Extractor{
 		ReadConfig: read.ReadConfig{
 			UsePreview:  *preview,
@@ -38,11 +38,11 @@ func main() {
 		RStore:      read.FileStore{},
 	}
 
-	err := extractor.ProcessAll()
+	s, err := extractor.ProcessAll()
 	if err != nil {
 		fmt.Println("Contentful export failed with the following error: " + err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Println("finished")
+		fmt.Printf("Exported %d items, and wrote %d index files for %d content types", s.Items, s.IndexFiles, s.Types)
 	}
 }

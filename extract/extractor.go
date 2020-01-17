@@ -16,12 +16,21 @@ type Extractor struct {
 	RStore      read.Store
 	TransConfig translate.TransConfig
 	WStore      write.Store
+	stats       *Stats
+}
+
+type Stats struct {
+	Types      int
+	IndexFiles int
+	Items      int
 }
 
 // ProcessAll goes through all stages: Read, Map, Translate and Write.
 // Underwater, it uses private function processItems to allow reading
 // through multiple pages of items being returned from Contentful.
-func (e *Extractor) ProcessAll() error {
+func (e *Extractor) ProcessAll() (Stats, error) {
+
+	e.stats = new(Stats)
 
 	cf := read.Contentful{
 		Getter:     e.Getter,
@@ -29,13 +38,15 @@ func (e *Extractor) ProcessAll() error {
 	}
 	typesReader, err := cf.Types()
 	if err != nil {
-		return err
+		return *e.stats, err
 	}
 
 	typeResult, err := mapper.MapTypes(typesReader)
 	if err != nil {
-		return err
+		return *e.stats, err
 	}
+
+	e.stats.Types = len(typeResult.Items)
 
 	writer := write.Writer{Store: e.WStore}
 	for _, t := range typeResult.Items {
@@ -43,14 +54,18 @@ func (e *Extractor) ProcessAll() error {
 		if fileName != "" && content != "" {
 			err = writer.SaveToFile(fileName, content)
 			if err != nil {
-				return err
+				return *e.stats, err
 			}
+			e.stats.IndexFiles++
 		}
 	}
-
 	skip := 0
 
-	return e.processItems(cf, typeResult, skip)
+	err = e.processItems(cf, typeResult, skip)
+	if err != nil {
+		return *e.stats, err
+	}
+	return *e.stats, nil
 }
 
 // processItems is a recursive function which goes through all pages
@@ -100,6 +115,7 @@ func (e *Extractor) processItems(cf read.Contentful, typeResult mapper.TypeResul
 		if err != nil {
 			return err
 		}
+		e.stats.Items++
 	}
 
 	nextPage := itemResult.Skip + itemResult.Limit
